@@ -7,6 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,13 +26,13 @@ public class UtenteController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UtenteDTO> createUtente(@RequestBody Utente utente) {
+    public ResponseEntity<UtenteDTO> createUtente(@Validated  @RequestBody Utente utente) {
         utenteService.createUtente(utente);
         return new ResponseEntity<>(modelMapper.map(utente, UtenteDTO.class), HttpStatus.CREATED);
     }
 
     //Recupera Tutti gli utenti
-    @GetMapping
+    @GetMapping("/users")
    public ResponseEntity<List<UtenteDTO>> getAllUtenti() {
     return new ResponseEntity<>(utenteService.getAllUtenti(), HttpStatus.OK);
     }

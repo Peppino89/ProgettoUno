@@ -1,5 +1,8 @@
 package com.example.progettouno.entity;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,11 +21,24 @@ public class Utente {
 
     @Id
     private String id;
+
+    @NotBlank(message = "Il nome non può essere vuoto")
     private String name;
+
+    @NotBlank(message = "L'email non può essere vuota")
+    @Email(message = "Formato non valido")
     private String email;
-    private String passwordHashed;
+
+    @NotBlank(message = "La password non può essere vuota")
+    @Pattern(
+            regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
+            message = "La password deve avere almeno 8 caratteri, una maiuscola, una minuscola, un numero e un simbolo speciale"
+    )
+    private String password;
+
     @CreatedDate
     private Instant createdAt;
+
     @LastModifiedDate
     private Instant updatedAt;
 }

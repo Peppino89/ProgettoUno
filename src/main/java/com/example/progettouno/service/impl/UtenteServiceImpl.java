@@ -41,8 +41,8 @@ public class UtenteServiceImpl implements UtenteService {
         }
 
         // Codifica la password
-        String hashedPassword = passwordEncoder.encode(utente.getPasswordHashed());
-        utente.setPasswordHashed(hashedPassword);
+        String hashedPassword = passwordEncoder.encode(utente.getPassword());
+        utente.setPassword(hashedPassword);
 
         // Salva l'utente nel database
         utenteRepository.save(utente);
@@ -59,7 +59,7 @@ public class UtenteServiceImpl implements UtenteService {
 
         // Codifica la nuova password
         String hashedPassword = passwordEncoder.encode(modificaPasswordDTO.getNewPassword());
-        utenteEsistente.setPasswordHashed(hashedPassword);
+        utenteEsistente.setPassword(hashedPassword);
 
         // Aggiorna nel database
         utenteRepository.save(utenteEsistente);
