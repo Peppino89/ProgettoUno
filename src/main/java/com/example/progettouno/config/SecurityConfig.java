@@ -21,7 +21,7 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable) // Disabilita CSRF (solo per sviluppo)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/utenti/**").permitAll() // Accesso pubblico
+                        .requestMatchers("/api/utenti/register").permitAll() // Accesso pubblico per il momento solo per la login
                         .anyRequest().authenticated() // Altre rotte richiedono autenticazione
                 )
                 .httpBasic(withDefaults()); // Autenticazione di base

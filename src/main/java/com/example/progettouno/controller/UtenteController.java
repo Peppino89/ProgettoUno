@@ -1,5 +1,7 @@
 package com.example.progettouno.controller;
 
+import com.example.progettouno.dto.ModificaPasswordDTO;
+import com.example.progettouno.dto.PasswordChangeResponseDTO;
 import com.example.progettouno.dto.UtenteDTO;
 import com.example.progettouno.entity.Utente;
 import com.example.progettouno.service.UtenteService;
@@ -30,6 +32,29 @@ public class UtenteController {
         utenteService.createUtente(utente);
         return new ResponseEntity<>(modelMapper.map(utente, UtenteDTO.class), HttpStatus.CREATED);
     }
+
+
+    @PatchMapping("/{id}")
+    // 🚨 FIRMA AGGIORNATA: Restituisce il nuovo DTO di risposta
+    public ResponseEntity<PasswordChangeResponseDTO> updatePassword(
+            @PathVariable String id,
+            @Validated @RequestBody ModificaPasswordDTO modificaPasswordDTO) {
+
+        // 1. Chiama il Service e riceve l'UtenteDTO AGGIORNATO (corretto)
+        UtenteDTO utenteAggiornato = utenteService.updatePassword(id, modificaPasswordDTO);
+
+        // 2. Crea il DTO di risposta ibrido
+        PasswordChangeResponseDTO responseDTO = new PasswordChangeResponseDTO(
+                "La password è stata modificata con successo per l'utente con ID: " + id,
+                utenteAggiornato
+        );
+
+        // 3. Restituisce il DTO ibrido con lo status 200 OK
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+    }
+
+
+
 
     //Recupera Tutti gli utenti
     @GetMapping("/users")
