@@ -31,6 +31,11 @@ public class GlobalExceptionHandler {
 
     // Puoi aggiungere altri metodi per altre eccezioni
 
+   @ExceptionHandler(BadPasswordException.class)
+   public ResponseEntity<ErrorResponse> handleBadPasswordException(BadPasswordException ex) {
+        ErrorResponse errorResponse = new ErrorResponse("BAD_PASSWORD", ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+   }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationErrors(MethodArgumentNotValidException ex) {
