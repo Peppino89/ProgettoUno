@@ -87,7 +87,7 @@ public class UtenteServiceImpl implements UtenteService {
     }
 
     @Override
-    public UtenteDTO deleteUtente(String id) {
+    public void deleteUtente(String id) {
         // Trova l'utente, lancia eccezione se non trovato
         Utente utenteEsistente = utenteRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("Utente non trovato con id: " + id));
@@ -96,7 +96,7 @@ public class UtenteServiceImpl implements UtenteService {
         utenteRepository.delete(utenteEsistente);
 
         // Ritorna DTO dell'utente eliminato
-        return modelMapper.map(utenteEsistente, UtenteDTO.class);
+       // return modelMapper.map(utenteEsistente, UtenteDTO.class);
     }
 
     @Override
