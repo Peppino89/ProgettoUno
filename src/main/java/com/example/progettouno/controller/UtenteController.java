@@ -1,9 +1,8 @@
 package com.example.progettouno.controller;
 
-import com.example.progettouno.dto.ModificaPasswordDTO;
-import com.example.progettouno.dto.PasswordChangeResponseDTO;
-import com.example.progettouno.dto.UtenteDTO;
+import com.example.progettouno.dto.*;
 import com.example.progettouno.entity.Utente;
+import com.example.progettouno.service.AuthenticationService;
 import com.example.progettouno.service.UtenteService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,19 +19,28 @@ public class UtenteController {
 
     private final UtenteService utenteService;
     private final ModelMapper modelMapper;
+    private final AuthenticationService authenticationService;
 
     @Autowired
-    public UtenteController(UtenteService utenteService, ModelMapper modelMapper) {
+    public UtenteController(UtenteService utenteService, ModelMapper modelMapper, AuthenticationService authenticationService) {
         this.utenteService = utenteService;
         this.modelMapper = modelMapper;
+        this.authenticationService = authenticationService;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UtenteDTO> createUtente(@Validated  @RequestBody Utente utente) {
-        utenteService.createUtente(utente);
-        return new ResponseEntity<>(modelMapper.map(utente, UtenteDTO.class), HttpStatus.CREATED);
+    public ResponseEntity<UtenteDTO> createUtente(@Validated @RequestBody Utente utente) {
+        UtenteDTO utenteCreato = utenteService.createUtente(utente);
+        return new ResponseEntity<>(utenteCreato, HttpStatus.CREATED);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<AuthenticationResponseDTO> authenticateUtente
+            (@Validated @RequestBody AuthenticationRequestDTO request) {
+
+        return ResponseEntity.ok(authenticationService.authenticate(request));
+
+    }
 
     @PatchMapping("/{id}")
     // 🚨 FIRMA AGGIORNATA: Restituisce il nuovo DTO di risposta
@@ -53,13 +61,26 @@ public class UtenteController {
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUtente(@PathVariable String id) {
+        utenteService.deleteUtente(id);
+
+        // Risposta RESTful: 204 No Content (Operazione riuscita senza corpo)
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+    }
 
 
+    @GetMapping("/{id}")
+    public ResponseEntity<UtenteDTO> getUtenteById(@PathVariable String id) {
+        UtenteDTO utenteDTO = utenteService.getUtenteById(id);
+        return new ResponseEntity<>(utenteDTO, HttpStatus.OK);
+    }
 
     //Recupera Tutti gli utenti
-    @GetMapping("/users")
-   public ResponseEntity<List<UtenteDTO>> getAllUtenti() {
-    return new ResponseEntity<>(utenteService.getAllUtenti(), HttpStatus.OK);
+    @GetMapping("/list")
+    public ResponseEntity<List<UtenteDTO>> getAllUtenti() {
+        return new ResponseEntity<>(utenteService.getAllUtenti(), HttpStatus.OK);
     }
 
 }
